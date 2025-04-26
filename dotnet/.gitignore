@@ -1,0 +1,3 @@
+﻿/dotnet/**/obj/
+/dotnet/**/bin/
+/dotnet/**/publish/
