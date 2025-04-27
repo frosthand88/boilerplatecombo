@@ -5,7 +5,7 @@
 }
 
 export interface ResearcherFilter {
-    name?: string;
+    filter?: string;
 }
 
 export interface PagedResult<T> {

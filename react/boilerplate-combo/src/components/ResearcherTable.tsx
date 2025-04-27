@@ -3,6 +3,7 @@ import { Researcher, ResearcherFilter } from '../types/researcher';
 import { fetchResearchers, createResearcher, updateResearcher, deleteResearcher } from '../api/researcherApi';
 import PaginationBar from './PaginationBar';
 import './ResearcherTable.css';
+import useDebounce from './useDebounce';
 
 const pageSize = 15;
 
@@ -13,17 +14,20 @@ function ResearcherTable() {
     const [totalPages, setTotalPages] = useState<number>(0);
     const [sortField, setSortField] = useState<string>('name');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [filters, setFilters] = useState<ResearcherFilter>({});
+    const [filters, setFilters] = useState<ResearcherFilter>({filter: ''});
     const [selectedResearcher, setSelectedResearcher] = useState<Researcher | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
 
+    // Debounced value for the name filter
+    const debouncedName = useDebounce(filters.filter, 500);  // Delay of 500ms
+
     useEffect(() => {
         loadData();
-    }, [page, sortField, sortOrder, filters]);
+    }, [page, sortField, sortOrder, debouncedName]);
 
     async function loadData() {
         setLoading(true);
-        const data = await fetchResearchers(page, pageSize, sortField, sortOrder, filters);
+        const data = await fetchResearchers(page, pageSize, sortField, sortOrder, { filter: debouncedName });
         setResearchers(data.data);
         setTotalPages(Math.ceil(data.totalCount / pageSize));
         setLoading(false);
@@ -96,7 +100,8 @@ function ResearcherTable() {
                         <input
                             type="text"
                             className="filter-input"
-                            onChange={e => handleFilterChange('name', e.target.value)}
+                            value={filters.filter || ''}  // Bind the filter state correctly
+                            onChange={e => handleFilterChange('filter', e.target.value)}
                             placeholder="Filter Name"
                         />
                     </th>
