@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import './PaginationBar.css';
 
 interface PaginationBarProps {
     currentPage: number;
@@ -42,16 +43,17 @@ const PaginationBar: React.FC<PaginationBarProps> = ({ currentPage, totalPages, 
     };
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", gap: "4px", flexWrap: "wrap" }}>
-            <button onClick={handleFirst} disabled={currentPage === 1}>
+        <div className="pagination-bar">
+            <button className="pagination-button" onClick={handleFirst} disabled={currentPage === 1}>
                 &laquo; {/* << */}
             </button>
-            <button onClick={handlePrevious} disabled={currentPage === 1}>
+            <button className="pagination-button" onClick={handlePrevious} disabled={currentPage === 1}>
                 &lsaquo; {/* < */}
             </button>
 
             {getPageNumbers().map((page) => (
                 <button
+                    className={`pagination-button ${currentPage === totalPages + 1 ? 'active' : ''}`}
                     key={page}
                     onClick={() => onPageChange(page)}
                     style={{
@@ -68,10 +70,10 @@ const PaginationBar: React.FC<PaginationBarProps> = ({ currentPage, totalPages, 
                 </button>
             ))}
 
-            <button onClick={handleNext} disabled={currentPage === totalPages}>
+            <button className="pagination-button" onClick={handleNext} disabled={currentPage === totalPages}>
                 &rsaquo; {/* > */}
             </button>
-            <button onClick={handleLast} disabled={currentPage === totalPages}>
+            <button className="pagination-button" onClick={handleLast} disabled={currentPage === totalPages}>
                 &raquo; {/* >> */}
             </button>
         </div>

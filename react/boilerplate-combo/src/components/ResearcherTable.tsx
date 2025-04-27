@@ -2,6 +2,7 @@
 import { Researcher, ResearcherFilter } from '../types/researcher';
 import { fetchResearchers, createResearcher, updateResearcher, deleteResearcher } from '../api/researcherApi';
 import PaginationBar from './PaginationBar';
+import './ResearcherTable.css';
 
 const pageSize = 15;
 
@@ -73,11 +74,20 @@ function ResearcherTable() {
     if (loading) return <p>Loading...</p>;
 
     return (
-        <div>
-            <button onClick={() => { setSelectedResearcher(null); setShowModal(true); }}>Add Researcher</button>
-            <button onClick={exportCSV}>Export CSV</button>
+        <div className="researcher-table-container">
+            <div className="button-container">
+                <button className="action-button" onClick={() => { setSelectedResearcher(null); setShowModal(true); }}>Add Researcher</button>
+                <button className="action-button" onClick={exportCSV}>Export CSV</button>
+            </div>
 
-            <table border={1} cellPadding={5}>
+            {/* Pagination */}
+            <PaginationBar
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={(newPage: any) => setPage(newPage)}
+            />
+
+            <table className="researcher-table">
                 <thead>
                 <tr>
                     <th onClick={() => handleSort('id')}>ID</th>
@@ -85,6 +95,7 @@ function ResearcherTable() {
                         <div onClick={() => handleSort('name')}>Name</div>
                         <input
                             type="text"
+                            className="filter-input"
                             onChange={e => handleFilterChange('name', e.target.value)}
                             placeholder="Filter Name"
                         />
@@ -101,8 +112,8 @@ function ResearcherTable() {
                             <td>{r.name}</td>
                             <td>{new Date(r.created_at).toLocaleString()}</td>
                             <td>
-                                <button onClick={() => { setSelectedResearcher(r); setShowModal(true); }}>Edit</button>
-                                <button onClick={() => handleDelete(r.id)}>Delete</button>
+                                <button className="action-button" onClick={() => { setSelectedResearcher(r); setShowModal(true); }}>Edit</button>
+                                <button className="action-button" onClick={() => handleDelete(r.id)}>Delete</button>
                             </td>
                         </tr>
                     ))
@@ -148,9 +159,7 @@ function Modal({ onClose, onSave, researcher }: ModalProps) {
     }
 
     return (
-        <div style={{
-            position: 'fixed', top: '30%', left: '30%', padding: '20px', backgroundColor: 'white', border: '1px solid black'
-        }}>
+        <div className="modal">
             <h3>{researcher ? 'Edit Researcher' : 'Add Researcher'}</h3>
             <form onSubmit={handleSubmit}>
                 <input

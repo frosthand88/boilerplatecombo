@@ -1,0 +1,78 @@
+﻿.researcher-table-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.button-container {
+    margin-bottom: 1rem;
+}
+
+.action-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-button:hover {
+    background-color: #45a049;
+}
+
+.researcher-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.researcher-table th, .researcher-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.researcher-table th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.filter-input {
+    margin-top: 4px;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal {
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid black;
+    z-index: 1000;
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal input {
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.modal button {
+    padding: 8px;
+    margin: 4px;
+}
