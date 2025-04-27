@@ -12,8 +12,8 @@ export async function fetchResearchers(
     const params = new URLSearchParams({
         page: page.toString(),
         pageSize: pageSize.toString(),
-        sortField,
-        sortOrder,
+        sortBy: sortField,
+        ascending: sortOrder === 'asc' ? 'true' : 'false',
         ...filters
     });
 

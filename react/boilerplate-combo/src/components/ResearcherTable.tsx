@@ -42,6 +42,13 @@ function ResearcherTable() {
         }
     }
 
+    function renderSortArrow(field: string) {
+        if (sortField === field) {
+            return sortOrder === 'asc' ? '↑' : '↓';
+        }
+        return '';  // No arrow if the field is not the sorted one
+    }
+
     function handleFilterChange(field: keyof ResearcherFilter, value: string) {
         setFilters(prev => ({ ...prev, [field]: value }));
         setPage(1);
@@ -94,9 +101,9 @@ function ResearcherTable() {
             <table className="researcher-table">
                 <thead>
                 <tr>
-                    <th onClick={() => handleSort('id')}>ID</th>
+                    <th onClick={() => handleSort('id')}>ID {renderSortArrow('id')}</th>
                     <th>
-                        <div onClick={() => handleSort('name')}>Name</div>
+                        <div onClick={() => handleSort('name')}>Name {renderSortArrow('name')}</div>
                         <input
                             type="text"
                             className="filter-input"
@@ -105,7 +112,7 @@ function ResearcherTable() {
                             placeholder="Filter Name"
                         />
                     </th>
-                    <th onClick={() => handleSort('created_at')}>Created At</th>
+                    <th onClick={() => handleSort('created_at')}>Created At {renderSortArrow('created_at')}</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
