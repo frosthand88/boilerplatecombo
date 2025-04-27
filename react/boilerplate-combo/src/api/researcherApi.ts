@@ -1,6 +1,6 @@
 ﻿import { Researcher, ResearcherFilter, PagedResult } from '../types/researcher';
 
-const API_BASE_URL = 'https://host.docker.internal:64010/researcher'; // Adjust your backend URL
+const API_BASE_URL = 'https://api.frosthand.com/researcher'; // Adjust your backend URL
 
 export async function fetchResearchers(
     page: number,
