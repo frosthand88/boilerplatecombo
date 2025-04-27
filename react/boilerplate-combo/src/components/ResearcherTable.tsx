@@ -1,8 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Researcher, ResearcherFilter } from '../types/researcher';
 import { fetchResearchers, createResearcher, updateResearcher, deleteResearcher } from '../api/researcherApi';
+import PaginationBar from './PaginationBar';
 
-const pageSize = 25;
+const pageSize = 15;
 
 function ResearcherTable() {
     const [researchers, setResearchers] = useState<Researcher[]>([]);
@@ -73,7 +74,6 @@ function ResearcherTable() {
 
     return (
         <div>
-            <h2>Researchers</h2>
             <button onClick={() => { setSelectedResearcher(null); setShowModal(true); }}>Add Researcher</button>
             <button onClick={exportCSV}>Export CSV</button>
 
@@ -115,13 +115,11 @@ function ResearcherTable() {
             </table>
 
             {/* Pagination */}
-            <div>
-                {Array.from({ length: totalPages }, (_, idx) => (
-                    <button key={idx} disabled={page === idx + 1} onClick={() => setPage(idx + 1)}>
-                        {idx + 1}
-                    </button>
-                ))}
-            </div>
+            <PaginationBar
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={(newPage: any) => setPage(newPage)}
+            />
 
             {/* Modal */}
             {showModal && (

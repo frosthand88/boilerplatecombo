@@ -19,7 +19,7 @@ public class ResearcherService(AppDbContext context)
         query = sortBy.ToLower() switch
         {
             "name" => ascending ? query.OrderBy(r => r.name) : query.OrderByDescending(r => r.name),
-            "createdat" => ascending ? query.OrderBy(r => r.created_at) : query.OrderByDescending(r => r.created_at),
+            "created_at" => ascending ? query.OrderBy(r => r.created_at) : query.OrderByDescending(r => r.created_at),
             _ => ascending ? query.OrderBy(r => r.id) : query.OrderByDescending(r => r.id)
         };
 
