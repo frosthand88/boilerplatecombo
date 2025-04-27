@@ -10,6 +10,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +37,9 @@ builder.Services.AddScoped<ResearcherService>();
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 var app = builder.Build();
+
+// Enable CORS
+app.UseCors("AllowAll");
 
 // Middleware
 app.UseSwagger();
