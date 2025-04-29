@@ -2,6 +2,7 @@
     id: number;
     name: string;
     created_at: string; // ISO string
+    age: number;
 }
 
 export interface ResearcherFilter {

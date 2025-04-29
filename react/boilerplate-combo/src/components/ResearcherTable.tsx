@@ -3,6 +3,7 @@ import { Researcher, ResearcherFilter } from '../types/researcher';
 import { fetchResearchers, createResearcher, updateResearcher, deleteResearcher } from '../api/researcherApi';
 import PaginationBar from './PaginationBar';
 import './ResearcherTable.css';
+import ResearcherCharts from "./ResearcherCharts";
 import useDebounce from './useDebounce';
 
 const pageSize = 15;
@@ -73,7 +74,7 @@ function ResearcherTable() {
     }
 
     function exportCSV() {
-        const csv = researchers.map(r => `${r.id},${r.name},${r.created_at}`).join('\n');
+        const csv = researchers.map(r => `${r.id},${r.name},${r.created_at},${r.age}`).join('\n');
         const blob = new Blob([`ID,Name,Created At\n${csv}`], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -86,6 +87,7 @@ function ResearcherTable() {
 
     return (
         <div className="researcher-table-container">
+            <ResearcherCharts fullResearchers={researchers} pageResearchers={researchers} />
             <div className="button-container">
                 <button className="action-button" onClick={() => { setSelectedResearcher(null); setShowModal(true); }}>Add Researcher</button>
                 <button className="action-button" onClick={exportCSV}>Export CSV</button>
@@ -113,6 +115,7 @@ function ResearcherTable() {
                         />
                     </th>
                     <th onClick={() => handleSort('created_at')}>Created At {renderSortArrow('created_at')}</th>
+                    <th onClick={() => handleSort('age')}>Age {renderSortArrow('age')}</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -123,6 +126,7 @@ function ResearcherTable() {
                             <td>{r.id}</td>
                             <td>{r.name}</td>
                             <td>{new Date(r.created_at).toLocaleString()}</td>
+                            <td>{r.age}</td>
                             <td>
                                 <button className="action-button" onClick={() => { setSelectedResearcher(r); setShowModal(true); }}>Edit</button>
                                 <button className="action-button" onClick={() => handleDelete(r.id)}>Delete</button>
