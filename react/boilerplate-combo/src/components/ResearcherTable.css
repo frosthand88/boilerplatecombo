@@ -1,6 +1,6 @@
 ﻿.researcher-table-container {
-    padding: 20px;
     font-family: Arial, sans-serif;
+    color: white;
 }
 
 h2 {
@@ -41,7 +41,7 @@ h2 {
 }
 
 .researcher-table th {
-    background-color: #f2f2f2;
+    background-color: #020202;
     cursor: pointer;
 }
 

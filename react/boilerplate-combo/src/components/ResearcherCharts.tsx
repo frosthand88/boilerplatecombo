@@ -43,8 +43,17 @@ function ResearcherCharts({ fullResearchers, pageResearchers }: { fullResearcher
             <div>
                 <h3>Age Group Histogram (All Data)</h3>
                 <BarChart width={300} height={250} data={fullData}>
-                    <XAxis dataKey="group" />
-                    <YAxis />
+                    <XAxis
+                        dataKey="group"
+                        tick={{ fill: 'white' }}
+                        axisLine={{ stroke: 'white' }}
+                        tickLine={{ stroke: 'white' }}
+                    />
+                    <YAxis
+                        tick={{ fill: 'white' }}
+                        axisLine={{ stroke: 'white' }}
+                        tickLine={{ stroke: 'white' }}
+                    />
                     <Tooltip />
                     <Bar dataKey="count" fill="#8884d8" />
                 </BarChart>
@@ -68,8 +77,19 @@ function ResearcherCharts({ fullResearchers, pageResearchers }: { fullResearcher
                 <h3>Age Group Scatterplot (Current Page)</h3>
                 <ScatterChart width={300} height={250}>
                     <CartesianGrid />
-                    <XAxis type="category" dataKey="group" />
-                    <YAxis type="number" dataKey="count" />
+                    <XAxis
+                        type="category"
+                        dataKey="group"
+                        tick={{ fill: 'white' }}
+                        axisLine={{ stroke: 'white' }}
+                        tickLine={{ stroke: 'white' }}
+                    />
+                    <YAxis
+                        dataKey="count"
+                        tick={{ fill: 'white' }}
+                        axisLine={{ stroke: 'white' }}
+                        tickLine={{ stroke: 'white' }}
+                    />
                     <Tooltip />
                     <Legend />
                     <Scatter name="Age Group" data={pageData} fill="#ff7300" />

@@ -5,6 +5,7 @@ import PaginationBar from './PaginationBar';
 import './ResearcherTable.css';
 import ResearcherCharts from "./ResearcherCharts";
 import useDebounce from './useDebounce';
+import MediaPlayer from "./MediaPlayer";
 
 const pageSize = 15;
 
@@ -88,6 +89,25 @@ function ResearcherTable() {
     return (
         <div className="researcher-table-container">
             <ResearcherCharts fullResearchers={researchers} pageResearchers={researchers} />
+
+            {/* On-Premise Video */}
+            <MediaPlayer
+                type="video"
+                src="/react/media/MiNiDianYing.mp4"
+                title="Local Hosted Video"
+                loop={false}
+                autoPlay={false}
+            />
+
+            {/* On-Premise Audio */}
+            <MediaPlayer
+                type="audio"
+                src="/react/media/Final_Fantasy_Unlimited__Over_the_Fantasy.mp3"
+                title="Local Hosted Audio"
+                loop={true}
+                autoPlay={true}
+            />
+
             <div className="button-container">
                 <button className="action-button" onClick={() => { setSelectedResearcher(null); setShowModal(true); }}>Add Researcher</button>
                 <button className="action-button" onClick={exportCSV}>Export CSV</button>
