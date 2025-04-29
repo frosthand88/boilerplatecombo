@@ -20,6 +20,7 @@ public class ResearcherService(AppDbContext context)
         {
             "name" => ascending ? query.OrderBy(r => r.name) : query.OrderByDescending(r => r.name),
             "created_at" => ascending ? query.OrderBy(r => r.created_at) : query.OrderByDescending(r => r.created_at),
+            "age" => ascending ? query.OrderBy(r => r.age) : query.OrderByDescending(r => r.age),
             _ => ascending ? query.OrderBy(r => r.id) : query.OrderByDescending(r => r.id)
         };
 
@@ -53,6 +54,7 @@ public class ResearcherService(AppDbContext context)
             return false;
 
         existing.name = updatedResearcher.name;
+        existing.age = updatedResearcher.age;
         await context.SaveChangesAsync();
         return true;
     }
@@ -74,7 +76,7 @@ public class ResearcherService(AppDbContext context)
         var csv = "Id,CreatedAt,Name\n";
         foreach (var researcher in researchers)
         {
-            csv += $"{researcher.id},{researcher.created_at:O},{EscapeCsv(researcher.name)}\n";
+            csv += $"{researcher.id},{researcher.created_at:O},{EscapeCsv(researcher.name)},{researcher.age}\n";
         }
         return csv;
     }
