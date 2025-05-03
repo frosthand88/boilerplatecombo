@@ -26,23 +26,39 @@ const API_BASE_URL = 'https://api.frosthand.com';
 
 const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
     const [data, setData] = useState<ChartData[]>([]);
-    const [xOffset, setXOffset] = useState(0); // For horizontal scroll
-    const [scale, setScale] = useState(1); // For zoom level (scale)
+    const [slicedData, setSlicedData] = useState<ChartData[]>([]);
+    const [xOffset, setXOffset] = useState(0); // Track horizontal scroll
+    const [scale, setScale] = useState(1); // For zoom level
+    const [isLoading, setIsLoading] = useState(false); // To prevent multiple API calls
+    const [lastFetchedDate, setLastFetchedDate] = useState<string>(''); // Track the last fetched date
     const chartContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await axios.get(`${API_BASE_URL}/api/chart/${symbol}?limit=100`);
-            setData(res.data);
-        };
-        fetchData();
-    }, [symbol]);
+            setIsLoading(true);
+            console.log("Fetching data...");
+            try {
+                const res = await axios.get(
+                    `${API_BASE_URL}/api/chart/${symbol}?limit=500${lastFetchedDate ? `&start_date=${lastFetchedDate}` : ''}`
+                );
+                console.log("Fetched data:", res.data);
 
-    // Calculate the Y-Axis domain (min and max)
-    const yAxisDomain = [
-        Math.min(...data.map(d => Math.min(d.open, d.high, d.low, d.close))),
-        Math.max(...data.map(d => Math.max(d.open, d.high, d.low, d.close)))
-    ];
+                // Prepend new data to the existing data and update the last fetched date
+                setData((prevData) => {
+                    const newData = [...res.data, ...prevData];
+                    console.log("Data after prepend:", newData);
+                    return newData;
+                });
+                setLastFetchedDate(res.data[0]?.date); // Update last date for pagination
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [symbol, lastFetchedDate]);
 
     // Handle mouse wheel zoom
     const handleWheel = (event: React.WheelEvent) => {
@@ -79,6 +95,46 @@ const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
         window.addEventListener('mouseup', handleMouseUp);
     };
 
+    // Check for more data to load when the user scrolls past the current data range
+    const checkForMoreData = () => {
+        const chartWidth = chartContainerRef.current?.offsetWidth ?? 0;
+        const visibleDataStart = Math.floor(xOffset / (chartWidth / scale)); // Calculate start point of visible data
+        console.log("Checking for more data. Current xOffset:", xOffset);
+
+        // When the user has scrolled past the 500th data point and no data is being loaded
+        if (visibleDataStart <= 500 && !isLoading) {
+            console.log("Requesting more data...");
+            setLastFetchedDate(data[0]?.date); // Update the last fetched date for pagination
+        }
+    };
+
+    useEffect(() => {
+        checkForMoreData();
+    }, [xOffset, data]);
+
+    // Calculate the Y-Axis domain (min and max)
+    const yAxisDomain = [
+        Math.min(...data.map(d => Math.min(d.open, d.high, d.low, d.close))),
+        Math.max(...data.map(d => Math.max(d.open, d.high, d.low, d.close)))
+    ];
+
+    useEffect(() => {
+        console.log("Data updated:", data);
+    }, [data]);
+
+    useEffect(() => {
+        if (!chartContainerRef.current) return;
+
+        const chartWidth = chartContainerRef.current.offsetWidth;
+        const candleWidth = 8;
+        const visibleCandles = Math.floor(chartWidth / candleWidth / scale);
+
+        const startIndex = Math.max(0, data.length - visibleCandles + Math.floor(xOffset / candleWidth));
+        const endIndex = Math.min(data.length, startIndex + visibleCandles);
+
+        setSlicedData(data.slice(startIndex, endIndex));
+    }, [xOffset, scale, data]);
+
     return (
         <div
             style={{ width: '100%', height: 500 }}
@@ -87,17 +143,14 @@ const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
             ref={chartContainerRef}
         >
             <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={data}>
+                <ComposedChart data={slicedData}> {/* Only show the last 100 candles */}
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                         dataKey="date"
                         tickFormatter={(date) => new Date(date).toLocaleDateString()}
-                        offset={xOffset}
                     />
                     <YAxis domain={yAxisDomain} />
-                    <Tooltip
-                        labelFormatter={(d) => new Date(d as string).toLocaleString()}
-                    />
+                    <Tooltip labelFormatter={(d) => new Date(d as string).toLocaleString()} />
 
                     {/* Customized rendering for Candlestick */}
                     <Customized
@@ -111,8 +164,8 @@ const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
 
                             return (
                                 <g>
-                                    {data.map((d, i) => {
-                                        const x = xScale(d.date) + xOffset; // Apply offset here
+                                    {slicedData.map((d, i) => {
+                                        const x = xScale(d.date); // Apply offset here
                                         const yOpen = yScale(d.open);
                                         const yClose = yScale(d.close);
                                         const yHigh = yScale(d.high);
