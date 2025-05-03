@@ -2,6 +2,7 @@
 import backgroundImage from '../assets/blue_nebula_and_planets.jpg';
 import ResearcherTable from '../components/ResearcherTable';
 import TriangleGamepadCanvas from "../components/TriangleGamepadCanvas";
+import ChartView from "../components/ChartView";
 
 function ResearcherPage() {
     return (
@@ -15,6 +16,7 @@ function ResearcherPage() {
             fontFamily: 'Arial, sans-serif'
         }}>
             <h1 style={{ color: "white" }}>Researcher Management</h1>
+            <ChartView symbol={"AAPL"}></ChartView>
             <TriangleGamepadCanvas />
             <ResearcherTable />
         </div>
