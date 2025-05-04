@@ -6,6 +6,7 @@ import './ResearcherTable.css';
 import ResearcherCharts from "./ResearcherCharts";
 import useDebounce from './useDebounce';
 import MediaPlayer from "./MediaPlayer";
+import TreeComponent from "./TreeExample";
 
 const pageSize = 15;
 
@@ -89,6 +90,7 @@ function ResearcherTable() {
     return (
         <div className="researcher-table-container">
             <ResearcherCharts fullResearchers={researchers} pageResearchers={researchers} />
+            <TreeComponent></TreeComponent>
 
             {/* On-Premise Video */}
             <MediaPlayer

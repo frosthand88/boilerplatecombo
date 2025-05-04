@@ -34,6 +34,27 @@ const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
     const chartContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const container = chartContainerRef.current;
+        if (!container) return;
+
+        const handleWheelManual = (event: WheelEvent) => {
+            event.preventDefault(); // Now allowed!
+            const zoomDirection = event.deltaY < 0 ? 1.1 : 0.9;
+            setScale((prevScale) => Math.max(0.5, Math.min(5, prevScale * zoomDirection)));
+
+            const chartWidth = container.offsetWidth;
+            const scrollDelta = event.clientX - container.getBoundingClientRect().left;
+            setXOffset((prevOffset) => prevOffset - (scrollDelta / chartWidth) * 100);
+        };
+
+        container.addEventListener('wheel', handleWheelManual, { passive: false });
+
+        return () => {
+            container.removeEventListener('wheel', handleWheelManual);
+        };
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
             console.log("Fetching data...");
@@ -138,7 +159,6 @@ const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
     return (
         <div
             style={{ width: '100%', height: 500 }}
-            onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             ref={chartContainerRef}
         >
