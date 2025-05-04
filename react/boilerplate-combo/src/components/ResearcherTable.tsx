@@ -7,6 +7,7 @@ import ResearcherCharts from "./ResearcherCharts";
 import useDebounce from './useDebounce';
 import MediaPlayer from "./MediaPlayer";
 import TreeComponent from "./TreeExample";
+import ResearcherModal from "./ResearcherModal";
 
 const pageSize = 15;
 
@@ -172,43 +173,12 @@ function ResearcherTable() {
 
             {/* Modal */}
             {showModal && (
-                <Modal
+                <ResearcherModal
                     onClose={() => { setShowModal(false); setSelectedResearcher(null); }}
                     onSave={handleSave}
                     researcher={selectedResearcher}
                 />
             )}
-        </div>
-    );
-}
-
-interface ModalProps {
-    onClose: () => void;
-    onSave: (data: Partial<Researcher>) => void;
-    researcher: Researcher | null;
-}
-
-function Modal({ onClose, onSave, researcher }: ModalProps) {
-    const [name, setName] = useState<string>(researcher ? researcher.name : '');
-
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        onSave({ name });
-    }
-
-    return (
-        <div className="modal">
-            <h3>{researcher ? 'Edit Researcher' : 'Add Researcher'}</h3>
-            <form onSubmit={handleSubmit}>
-                <input
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Name"
-                    required
-                />
-                <button type="submit">Save</button>
-                <button onClick={onClose} type="button">Cancel</button>
-            </form>
         </div>
     );
 }
