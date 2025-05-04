@@ -8,6 +8,7 @@ import useDebounce from './useDebounce';
 import MediaPlayer from "./MediaPlayer";
 import TreeComponent from "./TreeExample";
 import ResearcherModal from "./ResearcherModal";
+import {WebSocketViewer} from "./WebSocketViewer";
 
 const pageSize = 15;
 
@@ -90,6 +91,7 @@ function ResearcherTable() {
 
     return (
         <div className="researcher-table-container">
+            <WebSocketViewer></WebSocketViewer>
             <ResearcherCharts fullResearchers={researchers} pageResearchers={researchers} />
             <TreeComponent></TreeComponent>
 
