@@ -1,6 +1,6 @@
 ﻿import { Researcher, ResearcherFilter, PagedResult } from '../types/researcher';
 
-const API_BASE_URL = 'https://api.frosthand.com/'; // Adjust your backend URL
+const API_BASE_URL = 'https://api.frosthand.com'; // Adjust your backend URL
 
 export async function fetchResearchers(
     framework: string,

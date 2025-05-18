@@ -6,6 +6,7 @@ function App() {
         <Router basename="/react">
             <Routes>
                 <Route path="/dotnet/researcher" element={<ResearcherPage framework='dotnet' />} />
+                <Route path="/fastapi/researcher" element={<ResearcherPage framework='fastapi' />} />
                 <Route path="/springboot/researcher" element={<ResearcherPage framework='springboot' />} />
             </Routes>
         </Router>
