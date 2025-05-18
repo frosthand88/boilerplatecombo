@@ -4,6 +4,7 @@ spring:
 app:
   datasources:
     postgres:
+      required: true
       jdbc-url: jdbc:postgresql://host.docker.internal:5432/frosthand_postgres_db
       username: frosthand_postgres_username
       password: frosthand_postgres_password

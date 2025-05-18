@@ -1,6 +1,7 @@
 package com.boilerplatecombo.config.postgres;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.*;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@ConditionalOnProperty(prefix = "app.datasources.postgres", name = "required", havingValue = "true")
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "com.boilerplatecombo.repo.postgres",
