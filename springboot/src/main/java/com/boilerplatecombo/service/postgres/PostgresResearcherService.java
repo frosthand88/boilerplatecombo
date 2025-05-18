@@ -29,25 +29,34 @@ public class PostgresResearcherService {
     }
 
     public ResearcherPage getResearchers(int page, int pageSize, String sortBy, boolean ascending, String filter) {
-        String jpql = "SELECT r FROM PostgresResearcher r";
-
+        // Base JPQL
+        String baseJpql = "FROM PostgresResearcher r";
+        String whereClause = "";
         if (filter != null && !filter.isBlank()) {
-            jpql += " WHERE r.name LIKE :filter";
+            whereClause = " WHERE r.name LIKE :filter";
         }
 
-        jpql += " ORDER BY r." + sanitizeSortBy(sortBy) + (ascending ? " ASC" : " DESC");
+        // Query for results (with ORDER BY and pagination)
+        String jpql = "SELECT r " + baseJpql + whereClause +
+                " ORDER BY r." + sanitizeSortBy(sortBy) + (ascending ? " ASC" : " DESC");
 
         TypedQuery<PostgresResearcher> query = entityManager.createQuery(jpql, PostgresResearcher.class);
-
-        if (filter != null && !filter.isBlank()) {
+        if (!whereClause.isEmpty()) {
             query.setParameter("filter", "%" + filter + "%");
         }
-
         query.setFirstResult((page - 1) * pageSize);
         query.setMaxResults(pageSize);
-
         List<PostgresResearcher> resultList = query.getResultList();
-        return new ResearcherPage(resultList, resultList.size());
+
+        // Separate COUNT query (without ORDER BY or pagination)
+        String countJpql = "SELECT COUNT(r) " + baseJpql + whereClause;
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+        if (!whereClause.isEmpty()) {
+            countQuery.setParameter("filter", "%" + filter + "%");
+        }
+        Long totalCount = countQuery.getSingleResult();
+
+        return new ResearcherPage(resultList, totalCount);
     }
 
     public long getTotalCount(String filter) {
