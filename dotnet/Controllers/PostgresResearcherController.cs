@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace BoilerplateCombo.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class ResearcherController : ControllerBase
+[Route("postgres/researcher")]
+public class PostgresResearcherController : ControllerBase
 {
     private readonly ResearcherService _service;
 
-    public ResearcherController(ResearcherService service)
+    public PostgresResearcherController(ResearcherService service)
     {
         _service = service;
     }
