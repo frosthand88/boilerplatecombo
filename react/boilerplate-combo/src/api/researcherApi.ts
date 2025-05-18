@@ -1,8 +1,9 @@
 ﻿import { Researcher, ResearcherFilter, PagedResult } from '../types/researcher';
 
-const API_BASE_URL = 'https://api.frosthand.com/researcher'; // Adjust your backend URL
+const API_BASE_URL = 'https://api.frosthand.com/'; // Adjust your backend URL
 
 export async function fetchResearchers(
+    framework: string,
     page: number,
     pageSize: number,
     sortField: string,
@@ -17,13 +18,13 @@ export async function fetchResearchers(
         ...filters
     });
 
-    const response = await fetch(`${API_BASE_URL}?${params.toString()}`);
+    const response = await fetch(`${API_BASE_URL}/${framework}/postgres/researcher?${params.toString()}`);
     const data = await response.json();
     return data;
 }
 
-export async function createResearcher(data: Partial<Researcher>): Promise<Researcher> {
-    const response = await fetch(API_BASE_URL, {
+export async function createResearcher(framework: string, data: Partial<Researcher>): Promise<Researcher> {
+    const response = await fetch(`${API_BASE_URL}/${framework}/postgres/researcher`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -31,8 +32,8 @@ export async function createResearcher(data: Partial<Researcher>): Promise<Resea
     return await response.json();
 }
 
-export async function updateResearcher(id: number, data: Partial<Researcher>): Promise<Researcher> {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+export async function updateResearcher(framework: string, id: number, data: Partial<Researcher>): Promise<Researcher> {
+    const response = await fetch(`${API_BASE_URL}/${framework}/postgres/researcher${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -40,8 +41,8 @@ export async function updateResearcher(id: number, data: Partial<Researcher>): P
     return await response.json();
 }
 
-export async function deleteResearcher(id: number): Promise<void> {
-    await fetch(`${API_BASE_URL}/${id}`, {
+export async function deleteResearcher(framework: string, id: number): Promise<void> {
+    await fetch(`${API_BASE_URL}/${framework}/postgres/researcher${id}`, {
         method: 'DELETE',
     });
 }

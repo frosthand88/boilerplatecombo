@@ -12,7 +12,7 @@ import {WebSocketViewer} from "./WebSocketViewer";
 
 const pageSize = 15;
 
-function ResearcherTable() {
+function ResearcherTable(props : any) {
     const [researchers, setResearchers] = useState<Researcher[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [page, setPage] = useState<number>(1);
@@ -32,7 +32,7 @@ function ResearcherTable() {
 
     async function loadData() {
         setLoading(true);
-        const data = await fetchResearchers(page, pageSize, sortField, sortOrder, { filter: debouncedName });
+        const data = await fetchResearchers(props.framework, page, pageSize, sortField, sortOrder, { filter: debouncedName });
         setResearchers(data.data);
         setTotalPages(Math.ceil(data.totalCount / pageSize));
         setLoading(false);
@@ -61,16 +61,16 @@ function ResearcherTable() {
 
     async function handleDelete(id: number) {
         if (window.confirm('Are you sure you want to delete this researcher?')) {
-            await deleteResearcher(id);
+            await deleteResearcher(props.framework, id);
             loadData();
         }
     }
 
     async function handleSave(data: Partial<Researcher>) {
         if (selectedResearcher) {
-            await updateResearcher(selectedResearcher.id, data);
+            await updateResearcher(props.framework, selectedResearcher.id, data);
         } else {
-            await createResearcher(data);
+            await createResearcher(props.framework, data);
         }
         setShowModal(false);
         setSelectedResearcher(null);
@@ -91,7 +91,7 @@ function ResearcherTable() {
 
     return (
         <div className="researcher-table-container">
-            <WebSocketViewer></WebSocketViewer>
+            {/*<WebSocketViewer></WebSocketViewer>*/}
             <ResearcherCharts fullResearchers={researchers} pageResearchers={researchers} />
             <TreeComponent></TreeComponent>
 

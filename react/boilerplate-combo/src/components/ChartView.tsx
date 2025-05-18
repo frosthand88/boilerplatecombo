@@ -22,7 +22,7 @@ type ChartViewProps = {
     symbol: string;
 };
 
-const API_BASE_URL = 'https://api.frosthand.com';
+const API_BASE_URL = 'https://api.frosthand.com/dotnet';
 
 const ChartView: React.FC<ChartViewProps> = ({ symbol }) => {
     const [data, setData] = useState<ChartData[]>([]);

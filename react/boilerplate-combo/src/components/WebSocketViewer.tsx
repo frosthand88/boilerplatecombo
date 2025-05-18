@@ -1,7 +1,7 @@
 import {useWebSocket} from "./useWebSocket";
 
 export function WebSocketViewer() {
-    const messages = useWebSocket("https://api.frosthand.com/ws");
+    const messages = useWebSocket("https://api.frosthand.com/dotnet/ws");
 
     return (
         <div>

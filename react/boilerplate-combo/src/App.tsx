@@ -5,7 +5,8 @@ function App() {
     return (
         <Router basename="/react">
             <Routes>
-                <Route path="/researcher" element={<ResearcherPage />} />
+                <Route path="/dotnet/researcher" element={<ResearcherPage framework='dotnet' />} />
+                <Route path="/springboot/researcher" element={<ResearcherPage framework='springboot' />} />
             </Routes>
         </Router>
     );
