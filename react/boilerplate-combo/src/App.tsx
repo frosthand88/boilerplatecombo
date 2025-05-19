@@ -8,6 +8,8 @@ function App() {
                 <Route path="/dotnet/researcher" element={<ResearcherPage framework='dotnet' />} />
                 <Route path="/fastapi/researcher" element={<ResearcherPage framework='fastapi' />} />
                 <Route path="/springboot/researcher" element={<ResearcherPage framework='springboot' />} />
+                <Route path="/nodejs/researcher" element={<ResearcherPage framework='nodejs' />} />
+                <Route path="/golang/researcher" element={<ResearcherPage framework='golang' />} />
             </Routes>
         </Router>
     );
