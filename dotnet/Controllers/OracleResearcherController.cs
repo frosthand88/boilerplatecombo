@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace BoilerplateCombo.Controllers;
 
 [ApiController]
-[Route("postgres/researcher")]
-public class PostgresResearcherController : ControllerBase
+[Route("oracle/researcher")]
+public class OracleResearcherController : ControllerBase
 {
-    private readonly PostgresResearcherService _service;
+    private readonly OracleResearcherService _service;
 
-    public PostgresResearcherController(PostgresResearcherService service)
+    public OracleResearcherController(OracleResearcherService service)
     {
         _service = service;
     }
@@ -30,14 +30,14 @@ public class PostgresResearcherController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddResearcher([FromBody] Researcher researcher)
+    public async Task<IActionResult> AddResearcher([FromBody] Researcher2 researcher)
     {
         var added = await _service.AddResearcherAsync(researcher);
         return CreatedAtAction(nameof(GetResearchers), new { id = added.id }, added);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateResearcher(int id, [FromBody] Researcher researcher)
+    public async Task<IActionResult> UpdateResearcher(int id, [FromBody] Researcher2 researcher)
     {
         var updated = await _service.UpdateResearcherAsync(id, researcher);
         if (!updated)

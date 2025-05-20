@@ -7,9 +7,9 @@ namespace BoilerplateCombo.Models;
 [Route("api/[controller]")]
 public class ChartController : ControllerBase
 {
-    private readonly AppDbContext _db;
+    private readonly PostgresDbContext _db;
 
-    public ChartController(AppDbContext db) => _db = db;
+    public ChartController(PostgresDbContext db) => _db = db;
 
     [HttpGet("{symbol}")]
     public IActionResult GetChart(

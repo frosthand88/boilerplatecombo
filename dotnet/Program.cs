@@ -28,11 +28,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<PostgresDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+builder.Services.AddDbContext<SqlServerDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+builder.Services.AddDbContext<MySqlDbContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("MySql")));
+builder.Services.AddDbContext<OracleDbContext>(options =>
+    options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
 
 // Add Services
-builder.Services.AddScoped<ResearcherService>();
+builder.Services.AddScoped<PostgresResearcherService>();
+builder.Services.AddScoped<SqlServerResearcherService>();
+builder.Services.AddScoped<MySqlResearcherService>();
+builder.Services.AddScoped<OracleResearcherService>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
