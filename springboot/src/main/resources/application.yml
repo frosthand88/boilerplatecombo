@@ -9,18 +9,24 @@ app:
       username: frosthand_postgres_username
       password: frosthand_postgres_password
       driver-class-name: org.postgresql.Driver
-
     oracle:
-      jdbc-url: jdbc:oracle:thin:@host.docker.internal:1521:XEPDB1
+      required: true
+      jdbc-url: jdbc:oracle:thin:@//host.docker.internal:1521/XEPDB1
       username: system
       password: frosthand_oracle_password
       driver-class-name: oracle.jdbc.OracleDriver
-
     mssql:
-      jdbc-url: jdbc:sqlserver://host.docker.internal:1433;databaseName=db
+      required: true
+      jdbc-url: jdbc:sqlserver://host.docker.internal:1433;databaseName=frosthand_mssql_db;trustServerCertificate=true
       username: sa
       password: frosthand_mssql_password123*!
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    mysql:
+      required: true
+      jdbc-url: jdbc:mysql://host.docker.internal:3306/frosthand_mysql_db
+      username: frosthand_mysql_username
+      password: frosthand_mysql_password
+      driver-class-name: com.mysql.cj.jdbc.Driver
 
 #    h2:
 #      url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1

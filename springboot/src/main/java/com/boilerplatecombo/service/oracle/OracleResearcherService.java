@@ -1,8 +1,8 @@
-package com.boilerplatecombo.service.postgres;
+package com.boilerplatecombo.service.oracle;
 
-import com.boilerplatecombo.entity.postgres.PostgresResearcher;
-import com.boilerplatecombo.entity.postgres.PostgresResearcherPage;
-import com.boilerplatecombo.repo.postgres.PostgresResearcherRepository;
+import com.boilerplatecombo.entity.oracle.OracleResearcher;
+import com.boilerplatecombo.entity.oracle.OracleResearcherPage;
+import com.boilerplatecombo.repo.oracle.OracleResearcherRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -19,24 +19,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PostgresResearcherService {
+public class OracleResearcherService {
 
     //@Autowired
-    private PostgresResearcherRepository repository;
+    private OracleResearcherRepository repository;
 
-    @PersistenceContext(unitName = "postgresEntityManagerFactory")
+    @PersistenceContext(unitName = "oracleEntityManagerFactory")
     private EntityManager entityManager;
 
-    public PostgresResearcherService(@Lazy PostgresResearcherRepository repo) {
+    public OracleResearcherService(@Lazy OracleResearcherRepository repo) {
         this.repository = repo;
     }
 
-    public PostgresResearcherPage getResearchers(int page, int pageSize, String sortBy, boolean ascending, String filter) {
+    public OracleResearcherPage getResearchers(int page, int pageSize, String sortBy, boolean ascending, String filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         // SELECT query
-        CriteriaQuery<PostgresResearcher> cq = cb.createQuery(PostgresResearcher.class);
-        Root<PostgresResearcher> root = cq.from(PostgresResearcher.class);
+        CriteriaQuery<OracleResearcher> cq = cb.createQuery(OracleResearcher.class);
+        Root<OracleResearcher> root = cq.from(OracleResearcher.class);
 
         if (filter != null && !filter.isBlank()) {
             cq.where(cb.like(root.get("name"), "%" + filter + "%"));
@@ -49,14 +49,14 @@ public class PostgresResearcherService {
             cq.orderBy(cb.desc(root.get(sanitizeSortBy(sortBy))));
         }
 
-        TypedQuery<PostgresResearcher> query = entityManager.createQuery(cq);
+        TypedQuery<OracleResearcher> query = entityManager.createQuery(cq);
         query.setFirstResult((page - 1) * pageSize);
         query.setMaxResults(pageSize);
-        List<PostgresResearcher> resultList = query.getResultList();
+        List<OracleResearcher> resultList = query.getResultList();
 
         // COUNT query
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<PostgresResearcher> countRoot = countQuery.from(PostgresResearcher.class);
+        Root<OracleResearcher> countRoot = countQuery.from(OracleResearcher.class);
         countQuery.select(cb.count(countRoot));
 
         if (filter != null && !filter.isBlank()) {
@@ -65,27 +65,26 @@ public class PostgresResearcherService {
 
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PostgresResearcherPage(resultList, totalCount);
+        return new OracleResearcherPage(resultList, totalCount);
     }
-
-    public Optional<PostgresResearcher> getResearcherById(Long id) {
+    
+    public Optional<OracleResearcher> getResearcherById(Long id) {
         return repository.findById(id);
     }
 
     @Transactional
-    public PostgresResearcher addResearcher(PostgresResearcher researcher) {
+    public OracleResearcher addResearcher(OracleResearcher researcher) {
         researcher.setCreatedAt(LocalDateTime.now());
         return repository.save(researcher);
     }
 
     @Transactional
-    public boolean updateResearcher(Long id, PostgresResearcher updated) {
-        Optional<PostgresResearcher> optional = repository.findById(id);
+    public boolean updateResearcher(Long id, OracleResearcher updated) {
+        Optional<OracleResearcher> optional = repository.findById(id);
         if (optional.isEmpty()) return false;
 
-        PostgresResearcher existing = optional.get();
+        OracleResearcher existing = optional.get();
         existing.setName(updated.getName());
-        existing.setAge(updated.getAge());
 
         repository.save(existing);
         return true;
@@ -100,14 +99,14 @@ public class PostgresResearcherService {
     }
 
     public String exportResearchersAsCsv() {
-        List<PostgresResearcher> list = repository.findAll();
+        List<OracleResearcher> list = repository.findAll();
         StringBuilder sb = new StringBuilder("Id,CreatedAt,Name,Age\n");
 
-        for (PostgresResearcher r : list) {
+        for (OracleResearcher r : list) {
             sb.append(r.getId()).append(",")
                     .append(r.getCreatedAt()).append(",")
                     .append(escapeCsv(r.getName())).append(",")
-                    .append(r.getAge()).append("\n");
+                    .append("\n");
         }
 
         return sb.toString();

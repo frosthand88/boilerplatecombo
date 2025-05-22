@@ -1,8 +1,8 @@
-package com.boilerplatecombo.controller.postgres;
+package com.boilerplatecombo.controller.oracle;
 
-import com.boilerplatecombo.entity.postgres.PostgresResearcher;
-import com.boilerplatecombo.entity.postgres.PostgresResearcherPage;
-import com.boilerplatecombo.service.postgres.PostgresResearcherService;
+import com.boilerplatecombo.entity.oracle.OracleResearcher;
+import com.boilerplatecombo.entity.oracle.OracleResearcherPage;
+import com.boilerplatecombo.service.oracle.OracleResearcherService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/postgres/researcher")
-public class PostgresResearcherController {
+@RequestMapping("/oracle/researcher")
+public class OracleResearcherController {
 
-    private PostgresResearcherService service;
+    private OracleResearcherService service;
 
-    public PostgresResearcherController(@Lazy PostgresResearcherService researcherService) {
+    public OracleResearcherController(@Lazy OracleResearcherService researcherService) {
         this.service = researcherService;
     }
 
     @GetMapping
-    public ResponseEntity<PostgresResearcherPage> getResearchers(
+    public ResponseEntity<OracleResearcherPage> getResearchers(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "25") int pageSize,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -40,13 +40,13 @@ public class PostgresResearcherController {
     }
 
     @PostMapping
-    public ResponseEntity<PostgresResearcher> addResearcher(@RequestBody PostgresResearcher researcher) {
-        PostgresResearcher added = service.addResearcher(researcher);
+    public ResponseEntity<OracleResearcher> addResearcher(@RequestBody OracleResearcher researcher) {
+        OracleResearcher added = service.addResearcher(researcher);
         return ResponseEntity.status(201).body(added);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateResearcher(@PathVariable Long id, @RequestBody PostgresResearcher researcher) {
+    public ResponseEntity<Void> updateResearcher(@PathVariable Long id, @RequestBody OracleResearcher researcher) {
         boolean updated = service.updateResearcher(id, researcher);
         return updated ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }

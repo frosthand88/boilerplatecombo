@@ -46,7 +46,7 @@ public class PostgresConfig {
         em.setJpaVendorAdapter(vendorAdapter);
 
         Map<String, Object> props = new HashMap<>();
-        props.put("hibernate.hbm2ddl.auto", "update");
+//        props.put("hibernate.hbm2ddl.auto", "update");
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         em.setJpaPropertyMap(props);
 
