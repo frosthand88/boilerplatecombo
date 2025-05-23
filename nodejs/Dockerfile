@@ -1,25 +1,26 @@
-# Base: Ubuntu
-FROM ubuntu:22.04
+FROM node:20-slim
 
-# Install Node.js (LTS) and required tools
-RUN apt-get update && apt-get install -y curl gnupg \
-  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-  && apt-get install -y nodejs \
-  && apt-get clean
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libsqlite3-dev \
+    libpq-dev \
+    default-libmysqlclient-dev \
+    unixodbc unixodbc-dev \
+    libaio1 curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json + package-lock.json
+# Copy package files and install deps
 COPY package*.json ./
+RUN npm install --omit=dev
 
-# Install dependencies
-RUN npm install
-
-# Copy rest of the code
+# Copy rest of the source
 COPY . .
 
-# Expose port (default for Express)
+# Expose port
 EXPOSE 3000
 
 # Start the app
