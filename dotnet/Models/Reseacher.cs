@@ -10,7 +10,7 @@ public class Researcher
 
 public class Researcher2
 {
-    public int id { get; set; }
+    public long id { get; set; }
     public DateTime created_at { get; set; }
     public string name { get; set; }
 }
