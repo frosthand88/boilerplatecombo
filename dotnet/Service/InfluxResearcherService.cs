@@ -1,50 +1,22 @@
 ﻿using BoilerplateCombo.Models;
 using BoilerplateCombo.Repository;
 using Cassandra;
+using InfluxDB.Client;
+using InfluxDB.Client.Api.Domain;
+using InfluxDB.Client.Writes;
 using Microsoft.EntityFrameworkCore;
 
 namespace BoilerplateCombo.Service;
 
-public class CassandraResearcherService(Cluster cluster)
+public class InfluxResearcherService(InfluxDBClient client)
 {
-    public async Task CreateKeyspace()
-    {
-        // Create Keyspace
-        var session = await cluster.ConnectAsync();
-        const string createKeyspace = @"
-            CREATE KEYSPACE IF NOT EXISTS benchmark_keyspace
-            WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}";
-        await session.ExecuteAsync(new SimpleStatement(createKeyspace));
-        
-        // Connect to the new keyspace
-        session = await cluster.ConnectAsync("benchmark_keyspace");
-
-        // Create Tables
-        var createTables = new[]
-        {
-            @"
-            CREATE TABLE IF NOT EXISTS researchers (
-                researcher_id UUID PRIMARY KEY,
-                name TEXT,
-                created_at TIMESTAMP,
-                age INT
-            )"
-        };
-
-        foreach (var query in createTables)
-        {
-            await session.ExecuteAsync(new SimpleStatement(query));
-        }
-    }
-    
     public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        var session = await cluster.ConnectAsync("benchmark_keyspace");
-        var rs = await session.ExecuteAsync(new SimpleStatement("SELECT * FROM researchers"));
-        foreach (var row in rs)
-        {
-            Console.WriteLine(row["column_name"]);
-        }
+        string fluxQuery = $"from(bucket:\"{"bucket"}\") |> range(start: -1h)";
+        var query = await client.GetQueryApi().QueryAsync(fluxQuery, "org");
+        foreach (var table in query)
+        foreach (var record in table.Records)
+            Console.WriteLine($"{record.GetTime()}: {record.GetValue()}");
         return new();
     }
 
@@ -56,21 +28,11 @@ public class CassandraResearcherService(Cluster cluster)
 
     public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
     {
-        var rand = new Random();
-
-        for (int i = 0; i < 1000; i++)
-        {
-            var session = await cluster.ConnectAsync("benchmark_keyspace");
-            var now = DateTimeOffset.UtcNow;
-
-            await session.ExecuteAsync(new SimpleStatement(
-                "INSERT INTO researchers (researcher_id, name, created_at, age) VALUES (?, ?, ?, ?)",
-                Guid.NewGuid(), $"Name {rand.Next(10000)}", now.AddHours(1), rand.Next(20, 50)));
-        }
-
-        Console.WriteLine("Inserted 1000 random records.");
-
-        Console.WriteLine("Keyspace and tables created successfully.");
+        var point = PointData.Measurement("sensor_data")
+            .Tag("sensor", "s1")
+            .Field("temperature", 23.5)
+            .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
+        client.GetWriteApi().WritePoint(point, "my-bucket", "my-org");
         return null;
     }
 

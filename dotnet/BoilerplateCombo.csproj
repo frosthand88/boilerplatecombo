@@ -8,8 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.1" />
       <PackageReference Include="CassandraCSharpDriver" Version="3.22.0" />
+      <PackageReference Include="DuckDB.NET.Data" Version="1.2.1" />
       <PackageReference Include="EFCore.Snowflake" Version="9.0.4" />
+      <PackageReference Include="InfluxDB.Client" Version="4.18.0" />
       <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
@@ -24,6 +27,13 @@
       <None Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="research_activity.duckdb" />
+      <EmbeddedResource Include="research_activity.duckdb">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace BoilerplateCombo.Controllers;
 
 [ApiController]
-[Route("cassandra/researcher")]
-public class CassandraController : ControllerBase
+[Route("elasticsearch/researcher")]
+public class ElasticSearchResearcherController : ControllerBase
 {
-    private readonly CassandraResearcherService _service;
+    private readonly ElasticSearchResearcherService _service;
 
-    public CassandraController(CassandraResearcherService service)
+    public ElasticSearchResearcherController(ElasticSearchResearcherService service)
     {
         _service = service;
     }
@@ -27,13 +27,6 @@ public class CassandraController : ControllerBase
     {
         var csv = await _service.ExportResearchersAsCsvAsync();
         return File(System.Text.Encoding.UTF8.GetBytes(csv), "text/csv", "researchers.csv");
-    }
-    
-    [HttpPost("createkeyspace")]
-    public async Task<IActionResult> CreateKeyspace()
-    {
-        await _service.CreateKeyspace();
-        return Ok();
     }
 
     [HttpPost]

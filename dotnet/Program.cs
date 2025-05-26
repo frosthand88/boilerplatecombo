@@ -1,8 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using Amazon.DynamoDBv2;
 using BoilerplateCombo.Repository;
 using BoilerplateCombo.Service;
 using Cassandra;
+using DuckDB.NET.Data;
+using InfluxDB.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -41,23 +44,36 @@ builder.Services.AddDbContext<MariaDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Maria")));
 builder.Services.AddDbContext<CockroachDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Cockroach")));
+builder.Services.AddDbContext<TimescaleDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Timescale")));
 // builder.Services.AddDbContext<SnowflakeDbContext>(options =>
 //     options.UseSnowflake(builder.Configuration.GetConnectionString("Snowflake")));
 
-var cluster = Cluster.Builder()
+// Add Services
+builder.Services.AddScoped<DuckDBConnection>(c => new DuckDBConnection(builder.Configuration.GetConnectionString("Duck")));
+builder.Services.AddScoped<Cluster>(c => Cluster.Builder()
     .AddContactPoint("host.docker.internal")
     .WithPort(9042)
-    .Build();
+    .Build());
+builder.Services.AddScoped<AmazonDynamoDBClient>();
+builder.Services.AddScoped<InfluxDBClient>(c => InfluxDBClientFactory.Create("http://localhost:8086", "token"));
 
-// Add Services
 builder.Services.AddScoped<PostgresResearcherService>();
 builder.Services.AddScoped<SqlServerResearcherService>();
 builder.Services.AddScoped<MySqlResearcherService>();
 builder.Services.AddScoped<OracleResearcherService>();
-builder.Services.AddScoped<CassandraResearcherService>(c => new CassandraResearcherService(cluster));
+builder.Services.AddScoped<CassandraResearcherService>();
 builder.Services.AddScoped<MariaResearcherService>();
 builder.Services.AddScoped<CockroachResearcherService>();
 builder.Services.AddScoped<SnowflakeResearcherService>();
+builder.Services.AddScoped<DuckResearcherService>();
+builder.Services.AddScoped<DynamoResearcherService>();
+builder.Services.AddScoped<InfluxResearcherService>();
+builder.Services.AddScoped<TimescaleResearcherService>();
+builder.Services.AddScoped<ElasticSearchResearcherService>();
+builder.Services.AddScoped<MongoResearcherService>();
+builder.Services.AddScoped<NeoResearcherService>();
+builder.Services.AddScoped<RedisResearcherService>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
