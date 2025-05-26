@@ -13,15 +13,18 @@ public class DuckResearcherService(DuckDBConnection duckDbConnection)
         var researchers = new List<Researcher2>();
         await duckDbConnection.OpenAsync();
         using var cmd = duckDbConnection.CreateCommand();
-        cmd.CommandText = "select top 10 * from researchers";
+        cmd.CommandText = "select * from research_activity limit 10";
         var reader = await cmd.ExecuteReaderAsync();
         while (await reader.ReadAsync())
-            researchers.Add(new Researcher2
-            {
-                id = (long)reader["id"],
-                name = (string)reader["name"],
-                created_at = (DateTime)reader["created_at"]
-            });
+        {
+            Console.WriteLine(reader.GetDateTime(0));
+        }
+            // researchers.Add(new Researcher2
+            // {
+            //     id = (long)reader["id"],
+            //     name = (string)reader["name"],
+            //     created_at = (DateTime)reader["created_at"]
+            // });
         return (researchers, researchers.Count);
     }
 

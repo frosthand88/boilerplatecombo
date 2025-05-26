@@ -34,6 +34,10 @@
       <EmbeddedResource Include="research_activity.duckdb">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="duckdb.dll" />
+      <EmbeddedResource Include="duckdb.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
