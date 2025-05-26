@@ -2,19 +2,15 @@
 using BoilerplateCombo.Repository;
 using Cassandra;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 
 namespace BoilerplateCombo.Service;
 
-public class ElasticSearchResearcherService(Cluster cluster)
+public class ElasticSearchResearcherService(ElasticClient client)
 {
     public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        ISession session = await cluster.ConnectAsync("benchmark_keyspace");
-        var rs = await session.ExecuteAsync(new SimpleStatement("SELECT * FROM researchers"));
-        foreach (var row in rs)
-        {
-            Console.WriteLine(row["column_name"]);
-        }
+        var result = client.Get<object>(1);
         return new();
     }
 
@@ -26,46 +22,26 @@ public class ElasticSearchResearcherService(Cluster cluster)
 
     public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
     {
-        // researcher.created_at = DateTime.UtcNow;
-        // context.researcher.Add(researcher);
-        // await context.SaveChangesAsync();
-        // return researcher;
+        var person = new { Id = 1, Name = "Alice", Age = 30 };
+        await client.IndexDocumentAsync(person);
         return null;
     }
 
     public async Task<bool> UpdateResearcherAsync(int id, Researcher2 updatedResearcher)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // existing.name = updatedResearcher.name;
-        // // existing.age = updatedResearcher.age;
-        // await context.SaveChangesAsync();
+        await client.UpdateAsync<object>(1, u => u.Doc(new { Age = 31 }));
         return true;
     }
 
     public async Task<bool> DeleteResearcherAsync(int id)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // context.researcher.Remove(existing);
-        // await context.SaveChangesAsync();
+        await client.DeleteAsync<object>(1);
         return true;
     }
 
     public async Task<string> ExportResearchersAsCsvAsync()
     {
-        // var researchers = await context.researcher.ToListAsync();
-        // var csv = "Id,CreatedAt,Name\n";
-        // foreach (var researcher in researchers)
-        // {
-        //     csv += $"{researcher.id},{researcher.created_at:O},{EscapeCsv(researcher.name)}\n";
-        //     // $",{researcher.age}\n";
-        // }
-        // return 
+        
         return "";
     }
 

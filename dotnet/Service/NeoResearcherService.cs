@@ -2,19 +2,18 @@
 using BoilerplateCombo.Repository;
 using Cassandra;
 using Microsoft.EntityFrameworkCore;
+using Neo4j.Driver;
 
 namespace BoilerplateCombo.Service;
 
-public class NeoResearcherService(Cluster cluster)
+public class NeoResearcherService(IDriver driver)
 {
     public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        ISession session = await cluster.ConnectAsync("benchmark_keyspace");
-        var rs = await session.ExecuteAsync(new SimpleStatement("SELECT * FROM researchers"));
-        foreach (var row in rs)
-        {
-            Console.WriteLine(row["column_name"]);
-        }
+        var session = driver.AsyncSession();;
+        var result = await session.RunAsync("MATCH (p:Person {name: $name}) RETURN p", new { name = "Alice" });
+        await result.ForEachAsync(r => Console.WriteLine(r["p"]));
+        await session.CloseAsync();
         return new();
     }
 
@@ -26,33 +25,27 @@ public class NeoResearcherService(Cluster cluster)
 
     public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
     {
-        // researcher.created_at = DateTime.UtcNow;
-        // context.researcher.Add(researcher);
-        // await context.SaveChangesAsync();
-        // return researcher;
+        var session = driver.AsyncSession();
+        await session.RunAsync("CREATE (p:Person {name: $name, age: $age})",
+            new { name = "Alice", age = 30 });
+        await session.CloseAsync();
         return null;
     }
 
     public async Task<bool> UpdateResearcherAsync(int id, Researcher2 updatedResearcher)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // existing.name = updatedResearcher.name;
-        // // existing.age = updatedResearcher.age;
-        // await context.SaveChangesAsync();
+        var session = driver.AsyncSession();
+        await session.RunAsync("MATCH (p:Person {name: $name}) SET p.age = $age",
+            new { name = "Alice", age = 31 });
+        await session.CloseAsync();
         return true;
     }
 
     public async Task<bool> DeleteResearcherAsync(int id)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // context.researcher.Remove(existing);
-        // await context.SaveChangesAsync();
+        var session = driver.AsyncSession();
+        await session.RunAsync("MATCH (p:Person {name: $name}) DELETE p", new { name = "Alice" });
+        await session.CloseAsync();
         return true;
     }
 

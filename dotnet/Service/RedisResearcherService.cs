@@ -2,19 +2,18 @@
 using BoilerplateCombo.Repository;
 using Cassandra;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace BoilerplateCombo.Service;
 
-public class RedisResearcherService(Cluster cluster)
+public class RedisResearcherService(ConnectionMultiplexer redis)
 {
     public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        ISession session = await cluster.ConnectAsync("benchmark_keyspace");
-        var rs = await session.ExecuteAsync(new SimpleStatement("SELECT * FROM researchers"));
-        foreach (var row in rs)
-        {
-            Console.WriteLine(row["column_name"]);
-        }
+        var db = redis.GetDatabase();
+        string name = await db.StringGetAsync("user:1:name");
+        int age = (int)await db.StringGetAsync("user:1:age");
+        Console.WriteLine($"Name: {name}, Age: {age}");
         return new();
     }
 
@@ -26,33 +25,22 @@ public class RedisResearcherService(Cluster cluster)
 
     public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
     {
-        // researcher.created_at = DateTime.UtcNow;
-        // context.researcher.Add(researcher);
-        // await context.SaveChangesAsync();
-        // return researcher;
+        var db = redis.GetDatabase();
+        await db.StringSetAsync("user:1:name", "Alice");
         return null;
     }
 
     public async Task<bool> UpdateResearcherAsync(int id, Researcher2 updatedResearcher)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // existing.name = updatedResearcher.name;
-        // // existing.age = updatedResearcher.age;
-        // await context.SaveChangesAsync();
+        var db = redis.GetDatabase();
+        await db.StringSetAsync("user:1:age", 30);
         return true;
     }
 
     public async Task<bool> DeleteResearcherAsync(int id)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // context.researcher.Remove(existing);
-        // await context.SaveChangesAsync();
+        var db = redis.GetDatabase();
+        await db.KeyDeleteAsync("user:1:name");
         return true;
     }
 

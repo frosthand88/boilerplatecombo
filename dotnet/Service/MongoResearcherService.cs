@@ -2,57 +2,52 @@
 using BoilerplateCombo.Repository;
 using Cassandra;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BoilerplateCombo.Service;
 
-public class MongoResearcherService(Cluster cluster)
+public class MongoResearcherService(MongoClient client)
 {
     public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        ISession session = await cluster.ConnectAsync("benchmark_keyspace");
-        var rs = await session.ExecuteAsync(new SimpleStatement("SELECT * FROM researchers"));
-        foreach (var row in rs)
-        {
-            Console.WriteLine(row["column_name"]);
-        }
+        var db = client.GetDatabase("bench");
+        var col = db.GetCollection<BsonDocument>("researchers");
+        var result = await col.FindAsync(new BsonDocument("researcher_id", "Alice"));
         return new();
     }
 
     public async Task<Researcher2?> GetResearcherByIdAsync(int id)
     {
-        //return await context.researcher.FindAsync(id);
+        var db = client.GetDatabase("bench");
+        var col = db.GetCollection<BsonDocument>("researchers");
+        var result = await col.FindAsync(new BsonDocument("researcher_id", id));
         return null;
     }
 
     public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
     {
-        // researcher.created_at = DateTime.UtcNow;
-        // context.researcher.Add(researcher);
-        // await context.SaveChangesAsync();
-        // return researcher;
+        var db = client.GetDatabase("bench");
+        var col = db.GetCollection<BsonDocument>("researchers");
+        var doc = new BsonDocument { { "name", "Alice" }, { "age", 30 } };
+        await col.InsertOneAsync(doc);
         return null;
     }
 
     public async Task<bool> UpdateResearcherAsync(int id, Researcher2 updatedResearcher)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // existing.name = updatedResearcher.name;
-        // // existing.age = updatedResearcher.age;
-        // await context.SaveChangesAsync();
+        var db = client.GetDatabase("bench");
+        var col = db.GetCollection<BsonDocument>("researchers");
+        var update = Builders<BsonDocument>.Update.Set("age", 31);
+        await col.UpdateOneAsync(new BsonDocument("name", "Alice"), update);
         return true;
     }
 
     public async Task<bool> DeleteResearcherAsync(int id)
     {
-        // var existing = await context.researcher.FindAsync(id);
-        // if (existing == null)
-        //     return false;
-        //
-        // context.researcher.Remove(existing);
-        // await context.SaveChangesAsync();
+        var db = client.GetDatabase("bench");
+        var col = db.GetCollection<BsonDocument>("researchers");
+        await col.DeleteOneAsync(new BsonDocument("name", "Alice"));
         return true;
     }
 

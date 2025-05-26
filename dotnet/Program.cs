@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using Neo4j.Driver;
+using Nest;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,8 +59,13 @@ builder.Services.AddScoped<Cluster>(c => Cluster.Builder()
     .AddContactPoint("host.docker.internal")
     .WithPort(9042)
     .Build());
+builder.Services.AddScoped<ElasticClient>(c => new ElasticClient(new ConnectionSettings(new Uri(builder.Configuration.GetConnectionString("Elasticsearch")))
+    .DefaultIndex("researchers")));
 builder.Services.AddScoped<AmazonDynamoDBClient>();
-builder.Services.AddScoped<InfluxDBClient>(c => InfluxDBClientFactory.Create("http://localhost:8086", "token"));
+builder.Services.AddScoped<InfluxDBClient>(c => InfluxDBClientFactory.Create(builder.Configuration.GetConnectionString("Influx"), "token"));
+builder.Services.AddScoped<MongoClient>(c => new MongoClient(builder.Configuration.GetConnectionString("Mongo")));
+builder.Services.AddScoped<IDriver>(c => GraphDatabase.Driver(builder.Configuration.GetConnectionString("Neo"), AuthTokens.Basic("neo4j", "strongpassword123")));
+builder.Services.AddScoped<ConnectionMultiplexer>(c => ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
 
 builder.Services.AddScoped<PostgresResearcherService>();
 builder.Services.AddScoped<SqlServerResearcherService>();
