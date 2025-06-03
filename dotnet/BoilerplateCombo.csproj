@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.1" />
+      <PackageReference Include="AWSSDK.SecretsManager" Version="4.0.0.4" />
       <PackageReference Include="CassandraCSharpDriver" Version="3.22.0" />
       <PackageReference Include="DuckDB.NET.Data" Version="1.2.1" />
       <PackageReference Include="EFCore.Snowflake" Version="9.0.4" />

@@ -30,14 +30,14 @@ public class SqlServerResearcherController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddResearcher([FromBody] Researcher2 researcher)
+    public async Task<IActionResult> AddResearcher([FromBody] ResearcherMsSql researcher)
     {
         var added = await _service.AddResearcherAsync(researcher);
         return CreatedAtAction(nameof(GetResearchers), new { id = added.id }, added);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateResearcher(int id, [FromBody] Researcher2 researcher)
+    public async Task<IActionResult> UpdateResearcher(int id, [FromBody] ResearcherMsSql researcher)
     {
         var updated = await _service.UpdateResearcherAsync(id, researcher);
         if (!updated)

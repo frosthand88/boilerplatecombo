@@ -12,8 +12,8 @@ public class InfluxResearcherService(InfluxDBClient client)
 {
     public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        string fluxQuery = $"from(bucket:\"{"bucket"}\") |> range(start: -1h)";
-        var query = await client.GetQueryApi().QueryAsync(fluxQuery, "org");
+        string fluxQuery = $"from(bucket:\"{"mybucket"}\") |> range(start: -1h)";
+        var query = await client.GetQueryApi().QueryAsync(fluxQuery, "myorg");
         foreach (var table in query)
         foreach (var record in table.Records)
             Console.WriteLine($"{record.GetTime()}: {record.GetValue()}");

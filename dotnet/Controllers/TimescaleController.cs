@@ -30,14 +30,14 @@ public class TimescaleResearcherController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddResearcher([FromBody] Researcher2 researcher)
+    public async Task<IActionResult> AddResearcher([FromBody] ResearchActivity researcher)
     {
         var added = await _service.AddResearcherAsync(researcher);
-        return CreatedAtAction(nameof(GetResearchers), new { id = added.id }, added);
+        return CreatedAtAction(nameof(GetResearchers), new { id = added.time }, added);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateResearcher(int id, [FromBody] Researcher2 researcher)
+    public async Task<IActionResult> UpdateResearcher(int id, [FromBody] ResearchActivity researcher)
     {
         var updated = await _service.UpdateResearcherAsync(id, researcher);
         if (!updated)

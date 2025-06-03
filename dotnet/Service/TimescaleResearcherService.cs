@@ -6,21 +6,21 @@ namespace BoilerplateCombo.Service;
 
 public class TimescaleResearcherService(TimescaleDbContext context)
 {
-    public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
+    public async Task<(List<ResearchActivity> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
-        var query = context.researcher.AsQueryable();
+        var query = context.research_activity.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filter))
         {
-            query = query.Where(r => r.name.Contains(filter));
+            query = query.Where(r => r.researcher.Contains(filter));
         }
 
         // Sorting
         query = sortBy.ToLower() switch
         {
-            "name" => ascending ? query.OrderBy(r => r.name) : query.OrderByDescending(r => r.name),
-            "created_at" => ascending ? query.OrderBy(r => r.created_at) : query.OrderByDescending(r => r.created_at),
-            _ => ascending ? query.OrderBy(r => r.id) : query.OrderByDescending(r => r.id)
+            "name" => ascending ? query.OrderBy(r => r.researcher) : query.OrderByDescending(r => r.researcher),
+            "created_at" => ascending ? query.OrderBy(r => r.time) : query.OrderByDescending(r => r.time),
+            _ => ascending ? query.OrderBy(r => r.researcher) : query.OrderByDescending(r => r.researcher)
         };
 
         var totalCount = await query.CountAsync();
@@ -33,48 +33,48 @@ public class TimescaleResearcherService(TimescaleDbContext context)
         return (researchers, totalCount);
     }
 
-    public async Task<Researcher2?> GetResearcherByIdAsync(int id)
+    public async Task<ResearchActivity?> GetResearcherByIdAsync(int id)
     {
-        return await context.researcher.FindAsync(id);
+        return await context.research_activity.FindAsync(id);
     }
 
-    public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
+    public async Task<ResearchActivity> AddResearcherAsync(ResearchActivity researcher)
     {
-        researcher.created_at = DateTime.UtcNow;
-        context.researcher.Add(researcher);
+        researcher.time = DateTime.UtcNow;
+        context.research_activity.Add(researcher);
         await context.SaveChangesAsync();
         return researcher;
     }
 
-    public async Task<bool> UpdateResearcherAsync(int id, Researcher2 updatedResearcher)
+    public async Task<bool> UpdateResearcherAsync(int id, ResearchActivity updatedResearcher)
     {
-        var existing = await context.researcher.FindAsync(id);
+        var existing = await context.research_activity.FindAsync(id);
         if (existing == null)
             return false;
 
-        existing.name = updatedResearcher.name;
+        existing.researcher = updatedResearcher.researcher;
         await context.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> DeleteResearcherAsync(int id)
     {
-        var existing = await context.researcher.FindAsync(id);
+        var existing = await context.research_activity.FindAsync(id);
         if (existing == null)
             return false;
 
-        context.researcher.Remove(existing);
+        context.research_activity.Remove(existing);
         await context.SaveChangesAsync();
         return true;
     }
 
     public async Task<string> ExportResearchersAsCsvAsync()
     {
-        var researchers = await context.researcher.ToListAsync();
-        var csv = "Id,CreatedAt,Name\n";
+        var researchers = await context.research_activity.ToListAsync();
+        var csv = "Researcher,CreatedAt,Paper\n";
         foreach (var researcher in researchers)
         {
-            csv += $"{researcher.id},{researcher.created_at:O},{EscapeCsv(researcher.name)}\n";
+            csv += $"{researcher.researcher},{researcher.time:O},{EscapeCsv(researcher.paper)}\n";
         }
         return csv;
     }

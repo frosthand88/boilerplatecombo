@@ -6,7 +6,7 @@ namespace BoilerplateCombo.Service;
 
 public class SqlServerResearcherService(SqlServerDbContext context)
 {
-    public async Task<(List<Researcher2> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
+    public async Task<(List<ResearcherMsSql> researchers, int totalCount)> GetResearchersAsync(int page, int pageSize, string sortBy, bool ascending, string? filter)
     {
         var query = context.researcher.AsQueryable();
 
@@ -34,12 +34,12 @@ public class SqlServerResearcherService(SqlServerDbContext context)
         return (researchers, totalCount);
     }
 
-    public async Task<Researcher2?> GetResearcherByIdAsync(int id)
+    public async Task<ResearcherMsSql?> GetResearcherByIdAsync(int id)
     {
         return await context.researcher.FindAsync(id);
     }
 
-    public async Task<Researcher2> AddResearcherAsync(Researcher2 researcher)
+    public async Task<ResearcherMsSql> AddResearcherAsync(ResearcherMsSql researcher)
     {
         researcher.created_at = DateTime.UtcNow;
         context.researcher.Add(researcher);
@@ -47,7 +47,7 @@ public class SqlServerResearcherService(SqlServerDbContext context)
         return researcher;
     }
 
-    public async Task<bool> UpdateResearcherAsync(int id, Researcher2 updatedResearcher)
+    public async Task<bool> UpdateResearcherAsync(int id, ResearcherMsSql updatedResearcher)
     {
         var existing = await context.researcher.FindAsync(id);
         if (existing == null)

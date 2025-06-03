@@ -5,5 +5,10 @@ namespace BoilerplateCombo.Repository;
 
 public class TimescaleDbContext(DbContextOptions<TimescaleDbContext> options) : DbContext(options)
 {
-    public DbSet<Researcher2> researcher { get; set; }
+    public DbSet<ResearchActivity> research_activity { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ResearchActivity>().HasNoKey();
+    }
 }
