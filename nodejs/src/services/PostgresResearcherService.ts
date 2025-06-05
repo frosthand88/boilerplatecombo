@@ -1,13 +1,14 @@
 import {ResearcherSchema} from '../entity/Researcher';
-import {PostgresSource} from "../data-source/postgres";
+import {getPostgresqlSource} from "../data-source/postgres";
 
 export class PostgresResearcherService {
     public static async getResearchers(
         page: number = 1,
         pageSize: number = 10,
         name?: string
+
     ): Promise<any> {
-        const source = PostgresSource;
+        const source = await getPostgresqlSource();
 
         if (!source.isInitialized) await source.initialize();
         console.log('Selected DB source:', source?.isInitialized);

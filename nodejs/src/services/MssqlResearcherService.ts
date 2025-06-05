@@ -1,5 +1,5 @@
 import {ResearcherSchema2} from '../entity/Researcher2';
-import {MssqlSource} from "../data-source/mssql";
+import {getMssqlSource} from "../data-source/mssql";
 
 export class MssqlResearcherService {
     public static async getResearchers(
@@ -7,7 +7,7 @@ export class MssqlResearcherService {
         pageSize: number = 10,
         name?: string
     ): Promise<any> {
-        const source = MssqlSource;
+        const source = await getMssqlSource();
 
         if (!source.isInitialized) await source.initialize();
         console.log('Selected DB source:', source?.isInitialized);

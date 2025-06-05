@@ -3,6 +3,7 @@
     "start": "ts-node src/server.ts"
   },
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
     "body-parser": "^2.2.0",
     "class-validator": "^0.14.2",
     "cors": "^2.8.5",

@@ -1,5 +1,5 @@
 import {ResearcherSchema3} from '../entity/Researcher3';
-import {OracleSource} from "../data-source/oracle";
+import {getOracleSource} from "../data-source/oracle";
 
 export class OracleResearcherService {
     public static async getResearchers(
@@ -7,7 +7,7 @@ export class OracleResearcherService {
         pageSize: number = 10,
         name?: string
     ): Promise<any> {
-        const source = OracleSource;
+        const source = await getOracleSource();
 
         if (!source.isInitialized) await source.initialize();
         console.log('Selected DB source:', source?.isInitialized);
