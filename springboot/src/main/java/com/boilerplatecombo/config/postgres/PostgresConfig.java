@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app.datasources.postgres", name = "required", havingValue = "true")
+@ConditionalOnProperty(prefix = "app.datasources.postgresql", name = "required", havingValue = "true")
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "com.boilerplatecombo.repo.postgres",
@@ -28,7 +28,7 @@ import java.util.Map;
 public class PostgresConfig {
 
     @Bean(name = "postgresDataSource")
-    @ConfigurationProperties(prefix = "app.datasources.postgres")
+    @ConfigurationProperties(prefix = "app.datasources.postgresql")
     public DataSource postgresDataSource() {
         return DataSourceBuilder.create().build();
     }

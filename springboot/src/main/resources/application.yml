@@ -3,29 +3,29 @@ spring:
 
 app:
   datasources:
-    postgres:
+    postgresql:
       required: true
       jdbc-url: jdbc:postgresql://host.docker.internal:5432/frosthand_postgres_db
       username: frosthand_postgres_username
-      password: frosthand_postgres_password
+      password: placeholder
       driver-class-name: org.postgresql.Driver
     oracle:
       required: true
       jdbc-url: jdbc:oracle:thin:@//host.docker.internal:1521/XEPDB1
       username: system
-      password: frosthand_oracle_password
+      password: placeholder
       driver-class-name: oracle.jdbc.OracleDriver
     mssql:
       required: true
       jdbc-url: jdbc:sqlserver://host.docker.internal:1433;databaseName=frosthand_mssql_db;trustServerCertificate=true
       username: sa
-      password: frosthand_mssql_password123*!
+      password: placeholder
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     mysql:
       required: true
       jdbc-url: jdbc:mysql://host.docker.internal:3306/frosthand_mysql_db
       username: frosthand_mysql_username
-      password: frosthand_mysql_password
+      password: placeholder
       driver-class-name: com.mysql.cj.jdbc.Driver
 
 #    h2:
