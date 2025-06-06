@@ -6,6 +6,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"time"
@@ -26,12 +27,25 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
+	roleArn := "arn:aws:iam::022499021574:role/fh-read-secret-role"
+	secretName := "MyAppSecret"
+
+	// Load secrets from AWS and inject into config
+	err := config.LoadAndInjectSecrets(ctx, roleArn, secretName)
+	if err != nil {
+		log.Fatalf("Failed to inject secrets: %v", err)
+	}
+
 	// Load config
 	cfg, err := config.LoadConfig()
 	log.Print(cfg)
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
+
+	log.Printf("Postgres DSN: %v", cfg.PostgresDSN)
 
 	// Connect databases
 	pgDB, err := database.NewPostgresDB(cfg.PostgresDSN)

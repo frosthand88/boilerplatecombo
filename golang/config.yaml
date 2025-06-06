@@ -1,5 +1,5 @@
 databases:
-  postgres: "host=host.docker.internal user=frosthand_postgres_username password=frosthand_postgres_password dbname=frosthand_postgres_db port=5432 sslmode=disable"
-  mysql: "frosthand_mysql_username:frosthand_mysql_password@tcp(host.docker.internal:3306)/frosthand_mysql_db?parseTime=true"
-  mssql: "sqlserver://sa:frosthand_mssql_password123*!@host.docker.internal:1433?database=frosthand_mssql_db"
-  oracle: "system/frosthand_oracle_password@host.docker.internal:1521/XEPDB1"
+  postgresql: "host=host.docker.internal user=frosthand_postgres_username password=__SECRET__ dbname=frosthand_postgres_db port=5432 sslmode=disable"
+  mysql: "frosthand_mysql_username:__SECRET__@tcp(host.docker.internal:3306)/frosthand_mysql_db?parseTime=true"
+  mssql: "sqlserver://sa:__SECRET__@host.docker.internal:1433?database=frosthand_mssql_db"
+  oracle: "system/__SECRET__@host.docker.internal:1521/XEPDB1"
