@@ -1,20 +1,55 @@
 # .yml takes priority over .properties
 spring:
 
+server:
+  port: 18080
+
 app:
   datasources:
-    postgresql:
+    cassandra:
       required: true
-      jdbc-url: jdbc:postgresql://host.docker.internal:5432/frosthand_postgres_db
-      username: frosthand_postgres_username
+      contact-points: host.docker.internal:9042
+      keyspace-name: benchmark_keyspace
+      local-datacenter: datacenter1
+    cockroachdb:
+      required: true
+      jdbc-url: jdbc:postgresql://host.docker.internal:26257/defaultdb
+      username: frosthand_cockroach_user
       password: placeholder
       driver-class-name: org.postgresql.Driver
-    oracle:
+    duckdb:
       required: true
-      jdbc-url: jdbc:oracle:thin:@//host.docker.internal:1521/XEPDB1
-      username: system
+      jdbc-url: jdbc:duckdb:research_activity.duckdb
+      driver-class-name: org.duckdb.DuckDBDriver
+#    dynamodb:
+#      required: true
+#      jdbc-url: jdbc:postgresql://host.docker.internal:5432/frosthand_postgres_db
+#      username: frosthand_postgres_username
+#      password: placeholder
+#      driver-class-name: org.postgresql.Driver
+    elasticsearch:
+      required: false
+      uri: http://host.docker.internal:9200
+      username: elastic
       password: placeholder
-      driver-class-name: oracle.jdbc.OracleDriver
+    influxdb:
+      required: true
+      url: http://host.docker.internal:38086
+      org: myorg
+      bucket: mybucket
+      password: placeholder
+    mariadb:
+      required: true
+      jdbc-url: jdbc:mysql://host.docker.internal:33306/frosthand_mariadb
+      username: frosthand_mariadb_user
+      password: placeholder
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    mongodb:
+      required: true
+      host: host.docker.internal:47017
+      username: frosthand_mongodb_user
+      password: placeholder
+      database: current_weather
     mssql:
       required: true
       jdbc-url: jdbc:sqlserver://host.docker.internal:1433;databaseName=frosthand_mssql_db;trustServerCertificate=true
@@ -27,6 +62,41 @@ app:
       username: frosthand_mysql_username
       password: placeholder
       driver-class-name: com.mysql.cj.jdbc.Driver
+    neo4j:
+      required: false
+      uri: bolt://host.docker.internal:7687
+      username: neo4j
+      password: placeholder
+    oracle:
+      required: true
+      jdbc-url: jdbc:oracle:thin:@//host.docker.internal:1521/XEPDB1
+      username: system
+      password: placeholder
+      driver-class-name: oracle.jdbc.OracleDriver
+    postgresql:
+      required: true
+      jdbc-url: jdbc:postgresql://host.docker.internal:5432/frosthand_postgres_db
+      username: frosthand_postgres_username
+      password: placeholder
+      driver-class-name: org.postgresql.Driver
+    redis:
+      required: true
+      host: host.docker.internal
+      port: 6379
+      password: placeholder
+      timeout: 5000
+#    snowflake:
+#      required: true
+#      jdbc-url: jdbc:sqlserver://host.docker.internal:1433;databaseName=frosthand_mssql_db;trustServerCertificate=true
+#      username: sa
+#      password: placeholder
+#      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    timescaledb:
+      required: true
+      jdbc-url: jdbc:postgresql://host.docker.internal:35432/timescale_db
+      username: admin
+      password: placeholder
+      driver-class-name: org.postgresql.Driver
 
 #    h2:
 #      url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
