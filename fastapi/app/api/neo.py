@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, Query
 from app.db.database import NEO4J_PASSWORD
-from app.db.models.researcher2 import Researcher2
 from neo4j import GraphDatabase, AsyncGraphDatabase
 import os
 

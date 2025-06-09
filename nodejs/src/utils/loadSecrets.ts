@@ -51,4 +51,13 @@ export async function injectSecretsFromAWS() {
     process.env.POSTGRES_PASSWORD = secretJson.postgresql;
     process.env.MSSQL_PASSWORD = secretJson.mssql;
     process.env.ORACLE_PASSWORD = secretJson.oracle;
+    process.env.TIMESCALE_PASSWORD = secretJson.timescaledb;
+    process.env.COCKROACH_PASSWORD = secretJson.cockroachdb;
+    process.env.MARIA_PASSWORD = secretJson.mariadb;
+    process.env.CASSANDRA_PASSWORD = secretJson.cassandra;
+    process.env.REDIS_PASSWORD = secretJson.redis;
+    process.env.MONGO_PASSWORD = secretJson.mongodb;
+    process.env.INFLUX_TOKEN = secretJson.influxdb;
+    process.env.NEO4J_PASSWORD = secretJson.neo4j;
+    process.env.ELASTIC_PASSWORD = secretJson.elasticsearch;
 }
