@@ -50,17 +50,31 @@ MYSQL_URL = inject_password("MYSQL_URL", "mysql")
 POSTGRES_URL = inject_password("POSTGRES_URL", "postgresql")
 MSSQL_URL = inject_password("MSSQL_URL", "mssql")
 ORACLE_URL = inject_password("ORACLE_URL", "oracle")
+TIMESCALE_URL = inject_password("TIMESCALE_URL", "timescaledb")
+COCKROACH_URL = inject_password("COCKROACH_URL", "cockroachdb")
+MARIA_URL = inject_password("MARIA_URL", "mariadb")
+REDIS_URL = inject_password("REDIS_URL", "redis")
+NEO4J_PASSWORD = inject_password("NEO4J_PASSWORD", "neo4j")
+MONGO_URL = inject_password("MONGO_URL", "mongodb")
+INFLUX_TOKEN = inject_password("INFLUX_TOKEN", "influxdb")
+ELASTIC_URL = inject_password("ELASTIC_URL", "elasticsearch")
 
 mysql_engine = create_async_engine(MYSQL_URL, echo=True) if MYSQL_URL else None
 postgres_engine = create_async_engine(POSTGRES_URL, echo=True) if POSTGRES_URL else None
 mssql_engine = create_async_engine(MSSQL_URL, echo=True) if MSSQL_URL else None
 oracle_engine = create_async_engine(ORACLE_URL, echo=True) if ORACLE_URL else None
+timescale_engine = create_async_engine(TIMESCALE_URL, echo=True) if TIMESCALE_URL else None
+cockroach_engine = create_async_engine(COCKROACH_URL, echo=True) if COCKROACH_URL else None
+CockroachSessionLocal = async_sessionmaker(cockroach_engine, expire_on_commit=False)
+maria_engine = create_async_engine(MARIA_URL, echo=True) if MARIA_URL else None
 
 mysql_session = async_sessionmaker(mysql_engine, expire_on_commit=False) if mysql_engine else None
 postgres_session = async_sessionmaker(postgres_engine, expire_on_commit=False) if postgres_engine else None
 mssql_session = async_sessionmaker(mssql_engine, expire_on_commit=False) if mssql_engine else None
 oracle_session = async_sessionmaker(oracle_engine, expire_on_commit=False) if oracle_engine else None
-
+timescale_session = async_sessionmaker(timescale_engine, expire_on_commit=False) if timescale_engine else None
+cockroach_session = async_sessionmaker(cockroach_engine, expire_on_commit=False) if cockroach_engine else None
+maria_session = async_sessionmaker(maria_engine, expire_on_commit=False) if maria_engine else None
 
 # Dependency functions for FastAPI
 
@@ -87,3 +101,20 @@ async def get_oracle_session() -> AsyncSession:
         raise RuntimeError("Oracle database is not configured")
     async with oracle_session() as session:
         yield session
+
+async def get_timescale_session() -> AsyncSession:
+    if not timescale_session:
+        raise RuntimeError("Timescale database is not configured")
+    async with timescale_session() as session:
+        yield session
+
+async def get_cockroach_session() -> AsyncSession:
+    async with CockroachSessionLocal() as session:
+        yield session
+
+async def get_maria_session() -> AsyncSession:
+    if not maria_session:
+        raise RuntimeError("Maria database is not configured")
+    async with maria_session() as session:
+        yield session
+
