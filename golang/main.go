@@ -1,7 +1,7 @@
 // @title Researcher API
 // @version 1.0
 // @description API for researchers with multi-DB support
-// @host localhost:8080
+// @host localhost:28080
 // @BasePath /
 package main
 
@@ -64,6 +64,46 @@ func main() {
 	//if err != nil {
 	//	log.Fatalf("Failed to connect to Oracle: %v", err)
 	//}
+	timescaleDB, err := database.NewTimescaleDB(cfg.TimescaleDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Timescale: %v", err)
+	}
+	cockroachDB, err := database.NewCockroachDB(cfg.CockroachDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Cockroach: %v", err)
+	}
+	mariaDB, err := database.NewMariaDB(cfg.MariaDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Maria: %v", err)
+	}
+	//duckDB, err := database.NewDuckDB(cfg.DuckDSN)
+	//if err != nil {
+	//	log.Fatalf("Failed to connect to Maria: %v", err)
+	//}
+	redisDB, err := database.NewRedisDB(cfg.RedisDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Redis: %v", err)
+	}
+	mongoDB, err := database.NewMongoDB(cfg.MongoDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Mongo: %v", err)
+	}
+	cassandraDB, err := database.NewCassandraDB(cfg.CassandraDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Cassandra: %v", err)
+	}
+	neoDB, err := database.NewNeoDB(cfg.NeoDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Neo4j: %v", err)
+	}
+	influxDB, err := database.NewInfluxDB(cfg.InfluxDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Influxdb: %v", err)
+	}
+	elasticDB, err := database.NewElasticDB(cfg.ElasticDSN)
+	if err != nil {
+		log.Fatalf("Failed to connect to Elasticsearch: %v", err)
+	}
 
 	// Create services
 	pgService := service.NewPostgresService(pgDB)
@@ -71,12 +111,32 @@ func main() {
 	mssqlService := service.NewMssqlService(mssqlDB)
 	//oracleRepo := database.NewOracleRepository(oracleDB)
 	//oracleService := service.NewOracleService(oracleRepo)
+	timescaleService := service.NewTimescaleService(timescaleDB)
+	cockroachService := service.NewCockroachService(cockroachDB)
+	mariaService := service.NewMariaService(mariaDB)
+	//duckService := service.NewDuckService(duckDB)
+	redisService := service.NewRedisService(redisDB)
+	mongoService := service.NewMongoService(mongoDB)
+	cassandraService := service.NewCassandraService(cassandraDB)
+	neoService := service.NewNeoService(neoDB)
+	influxService := service.NewInfluxService(influxDB)
+	elasticService := service.NewElasticService(elasticDB)
 
 	// Create controllers
 	pgCtrl := controllers.NewPostgresController(pgService)
 	mysqlCtrl := controllers.NewMysqlController(mysqlService)
 	mssqlCtrl := controllers.NewMssqlController(mssqlService)
 	//oracleCtrl := controllers.NewOracleController(oracleService)
+	timescaleCtrl := controllers.NewTimescaleController(timescaleService)
+	cockroachCtrl := controllers.NewCockroachController(cockroachService)
+	mariaCtrl := controllers.NewMariaController(mariaService)
+	//duckCtrl := controllers.NewDuckController(duckService)
+	redisCtrl := controllers.NewRedisController(redisService)
+	mongoCtrl := controllers.NewMongoController(mongoService)
+	cassandraCtrl := controllers.NewCassandraController(cassandraService)
+	neoCtrl := controllers.NewNeoController(neoService)
+	influxCtrl := controllers.NewInfluxController(influxService)
+	elasticCtrl := controllers.NewElasticController(elasticService)
 
 	r := gin.Default()
 
@@ -93,7 +153,7 @@ func main() {
 	// ✅ --- DYNAMIC SWAGGER HOST DETECTION ---
 	swaggerHost := os.Getenv("SWAGGER_HOST")
 	if swaggerHost == "" {
-		swaggerHost = "localhost:8080" // fallback if not set
+		swaggerHost = "localhost:28080" // fallback if not set
 	}
 	docs.SwaggerInfo.Host = swaggerHost
 	swaggerURL := ginSwagger.URL("http://" + swaggerHost + "/swagger/doc.json")
@@ -106,10 +166,20 @@ func main() {
 	r.GET("/mysql/researchers", mysqlCtrl.GetResearchers)
 	r.GET("/mssql/researchers", mssqlCtrl.GetResearchers)
 	//r.GET("/oracle/researchers", oracleCtrl.GetResearchers)
+	r.GET("/timescale/researchers", timescaleCtrl.GetResearchers)
+	r.GET("/cockroach/researchers", cockroachCtrl.GetResearchers)
+	r.GET("/maria/researchers", mariaCtrl.GetResearchers)
+	//r.GET("/duck/researchers", duckCtrl.GetResearchers)
+	r.GET("/redis/researchers", redisCtrl.GetResearchers)
+	r.GET("/mongo/researchers", mongoCtrl.GetResearchers)
+	r.GET("/cassandra/researchers", cassandraCtrl.GetResearchers)
+	r.GET("/neo/researchers", neoCtrl.GetResearchers)
+	r.GET("/influx/researchers", influxCtrl.GetResearchers)
+	r.GET("/elastic/researchers", elasticCtrl.GetResearchers)
 
 	// Start server
-	log.Println("Starting server at :8080")
-	if err := r.Run("0.0.0.0:8080"); err != nil {
+	log.Println("Starting server at :28080")
+	if err := r.Run("0.0.0.0:28080"); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
 	}
 }
