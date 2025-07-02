@@ -1,4 +1,13 @@
 ﻿import { Researcher, ResearcherFilter, PagedResult } from '../types/researcher';
+import { UserManager } from 'oidc-client-ts';
+import { oidcConfig } from '../authConfig';
+
+const userManager = new UserManager(oidcConfig);
+
+const getToken = async (): Promise<string | null> => {
+    const user = await userManager.getUser();
+    return user?.access_token || null;
+};
 
 const API_BASE_URL = 'https://api.frosthand.com'; // Adjust your backend URL
 
@@ -10,6 +19,14 @@ export async function fetchResearchers(
     sortOrder: string,
     filters: ResearcherFilter
 ): Promise<PagedResult<Researcher>> {
+    const token = await getToken();
+    const res = await fetch(`${API_BASE_URL}/secure`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const securedat = await res.json();
+
     const params = new URLSearchParams({
         page: page.toString(),
         pageSize: pageSize.toString(),
