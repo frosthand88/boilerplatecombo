@@ -2,6 +2,7 @@
 
 using Amazon.DynamoDBv2;
 using BoilerplateCombo;
+using BoilerplateCombo.Models;
 using BoilerplateCombo.Repository;
 using BoilerplateCombo.Service;
 using Cassandra;
@@ -105,6 +106,16 @@ builder.Services.AddScoped<MongoResearcherService>();
 builder.Services.AddScoped<NeoResearcherService>();
 builder.Services.AddScoped<RedisResearcherService>();
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = "https://auth.frosthand.com/realms/frosthand";
+        options.Audience = "frosthand-dotnet-backend"; // match Keycloak client ID
+        options.RequireHttpsMetadata = false; // only for dev
+    });
+
+builder.Services.AddAuthorization();
+
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 var app = builder.Build();
@@ -112,11 +123,14 @@ var app = builder.Build();
 // Enable CORS
 app.UseCors("AllowAll");
 
+app.UseRouting();
+
 // Middleware
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseWebSockets();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

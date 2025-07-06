@@ -6,6 +6,7 @@ export const oidcConfig: UserManagerSettings = {
     redirect_uri: 'https://www.frosthand.com/react/callback',
     response_type: 'code',
     scope: 'openid profile email',
+    post_logout_redirect_uri: 'https://www.frosthand.com',
 
     // 👇 Token storage config
     userStore: new WebStorageStateStore({ store: window.localStorage }),

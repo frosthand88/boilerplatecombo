@@ -20,7 +20,7 @@ export async function fetchResearchers(
     filters: ResearcherFilter
 ): Promise<PagedResult<Researcher>> {
     const token = await getToken();
-    const res = await fetch(`${API_BASE_URL}/secure`, {
+    const res = await fetch(`${API_BASE_URL}/dotnet/secure`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

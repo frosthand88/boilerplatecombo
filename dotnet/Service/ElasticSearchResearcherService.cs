@@ -16,7 +16,11 @@ public class ElasticSearchResearcherService(ElasticClient client)
 
     public async Task<Researcher2?> GetResearcherByIdAsync(int id)
     {
-        //return await context.researcher.FindAsync(id);
+        var response = await client.GetAsync<Researcher2>(id, g => g.Index("researchers"));
+        if (response.Found)
+        {
+            return response.Source;
+        }
         return null;
     }
 
@@ -41,8 +45,22 @@ public class ElasticSearchResearcherService(ElasticClient client)
 
     public async Task<string> ExportResearchersAsCsvAsync()
     {
-        
-        return "";
+        // Query all researchers from Elasticsearch
+        var searchResponse = await client.SearchAsync<Researcher2>(s => s
+            .Index("researchers")
+            .Size(10000) // adjust as needed for your dataset size
+            .Query(q => q.MatchAll())
+        );
+
+        var researchers = searchResponse.Documents;
+        var csv = new System.Text.StringBuilder();
+        // Write header
+        csv.AppendLine("id,created_at,name");
+        foreach (var r in researchers)
+        {
+            csv.AppendLine($"{r.id},{EscapeCsv(r.created_at.ToString("o"))},{EscapeCsv(r.name)}");
+        }
+        return csv.ToString();
     }
 
     private string EscapeCsv(string value)

@@ -1,0 +1,106 @@
+/* Container styles */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+    background-color: #f5f6fa;
+}
+
+/* Card */
+.login-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px 24px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.login-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.email-btn {
+    background-color: #2b6cb0;
+    color: white;
+}
+
+.email-btn:hover {
+    background-color: #1a4e8a;
+}
+
+.social-btn {
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.social-btn:hover {
+    background-color: #e4e4e4;
+}
+
+/* Icon */
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+/* Divider */
+.divider {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin: 20px 0;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 40%;
+    background: #ccc;
+    top: 50%;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.react-logo {
+    width: 60px;
+    height: 60px;
+}

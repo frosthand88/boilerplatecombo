@@ -1,0 +1,1 @@
+docker rm -f boilerplate-vue

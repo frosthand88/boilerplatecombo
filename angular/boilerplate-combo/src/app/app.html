@@ -1,0 +1,58 @@
+@if (auth.user) {
+  <div>
+    <h1>Welcome, {{ auth.user.profile.preferred_username }}!</h1>
+    <button (click)="auth.logout()">Logout</button>
+  </div>
+} @else {
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo-wrapper">
+        <img
+          src="https://angular.io/assets/images/logos/angular/angular.svg"
+          alt="Angular Logo"
+          class="angular-logo"
+        />
+      </div>
+
+      <h1 class="login-title">Sign in to Frosthand</h1>
+
+      <button class="btn email-btn" (click)="auth.loginWithEmail()">
+        <img
+          src="https://fonts.gstatic.com/s/i/materialiconsoutlined/mail/v13/24px.svg"
+          alt="Email"
+          class="icon"
+        />
+        Sign in with Email
+      </button>
+
+      <div class="divider">or continue with</div>
+
+      <button class="btn social-btn" (click)="auth.loginWithGoogle()">
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google"
+          class="icon"
+        />
+        Sign in with Google
+      </button>
+
+      <button class="btn social-btn" (click)="auth.loginWithMicrosoft()">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+          alt="Microsoft"
+          class="icon"
+        />
+        Sign in with Microsoft
+      </button>
+
+      <button class="btn social-btn" (click)="auth.loginWithGithub()">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+          alt="GitHub"
+          class="icon"
+        />
+        Sign in with GitHub
+      </button>
+    </div>
+  </div>
+}
